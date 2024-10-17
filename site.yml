@@ -17,6 +17,27 @@
       update_cache: yes
     when: ansible_distribution == "Ubuntu"
 
+  - name: create user
+    tags: always
+    ansible.builtin.user:
+      name: laurent
+      groups: root 
+
+  - name: add sudoers file for laurent
+    tags: always
+    ansible.builtin.copy:
+      src: sudoer_laurent
+      dest: /etc/sudoers.d/laurent
+      owner: root
+      group: root
+      mode: 0440
+
+  - name: add ssh key for laurent user
+    tags: always
+    ansible.builtin.authorized_key:
+      user: laurent
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAzaWJxEossov6Xk6xRSyvTBow/hEKIG6CFyW7KCeVRI guest@Ubuntu-WS"
+
 - hosts: web_servers
   become: true
   tasks:
